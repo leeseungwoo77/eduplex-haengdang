@@ -1039,7 +1039,7 @@ function renderNews(items){
       <!-- 썸네일: 링크 클릭 -->
       <a class="news-thumb-link" href="${item.link||'#'}" target="_blank" id="newsCardLink-${i}">
         <div class="news-thumb-wrap">
-          ${item.img?`<img src="${item.img}" alt="소식 이미지">`:`<span>${item.emoji||'📰'}</span>`}
+          ${item.img?`<img src="${item.img}" alt="소식 이미지" referrerpolicy="no-referrer" loading="lazy">`:`<span>${item.emoji||'📰'}</span>`}
           <button class="news-img-btn" onclick="event.preventDefault();event.stopPropagation();openNewsImgModal(${i})">🖼 이미지 변경</button>
         </div>
       </a>
