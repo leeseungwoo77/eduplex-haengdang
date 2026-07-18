@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>성적관리 — 행당 에듀플렉스</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --ep-navy:#00012D; --ep-navy2:#000118; --ep-blue:#0047C7; --ep-blue-deep:#02057A;
+  --ep-yellow:#FFE000; --ep-card-light:#EEF2FF; --ep-bg:#f5f7ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:var(--ep-bg);color:var(--ep-blue-deep);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* HEADER */
+.top{background:var(--ep-navy);height:56px;display:flex;align-items:center;padding:0 24px;gap:12px;}
+.top-title{font-size:15px;font-weight:700;color:#fff;}
+.top-sub{font-size:11px;color:rgba(255,255,255,.55);}
+.top-back{margin-left:auto;font-size:13px;color:rgba(255,255,255,.7);}
+.top-back:hover{color:#fff;}
+
+/* LOGIN */
+.login-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.login-card{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;text-align:center;box-shadow:0 8px 40px rgba(0,18,122,.10);}
+.login-badge{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--ep-blue),var(--ep-navy));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;}
+.login-card h2{font-size:22px;font-weight:800;color:var(--ep-navy);margin-bottom:8px;}
+.login-card p{font-size:13px;color:rgba(2,5,122,.55);margin-bottom:28px;}
+.pin-label{font-size:12px;font-weight:700;color:var(--ep-blue-deep);text-align:left;margin-bottom:8px;}
+.pin-row{position:relative;margin-bottom:16px;}
+.pin-input{width:100%;border:2px solid #dde2f5;border-radius:12px;padding:14px 44px 14px 16px;font-size:15px;font-weight:600;letter-spacing:.1em;color:var(--ep-navy);font-family:inherit;text-align:center;}
+.pin-input:focus{outline:none;border-color:var(--ep-blue);}
+.pin-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;opacity:.5;font-size:15px;background:none;border:none;}
+.pin-eye:hover{opacity:.9;}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--ep-blue),var(--ep-navy));color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;font-family:inherit;}
+.login-btn:hover{opacity:.9;}
+.login-error{font-size:12px;color:#dc2626;margin-top:12px;display:none;}
+.login-foot{font-size:12px;color:rgba(2,5,122,.4);margin-top:20px;}
+
+/* APP */
+.app{display:none;padding:28px 5vw 60px;max-width:1100px;margin:0 auto;}
+.app.show{display:block;}
+.app-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.app-title{font-size:22px;font-weight:800;color:var(--ep-navy);}
+.app-hdr-right{display:flex;gap:8px;align-items:center;}
+.btn{padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:opacity .15s;}
+.btn:hover{opacity:.85;}
+.btn-primary{background:var(--ep-blue);color:#fff;}
+.btn-ghost{background:#fff;color:var(--ep-blue-deep);border:1px solid #dde2f5;}
+
+.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;border:1.5px solid #dde2f5;border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--ep-navy);font-family:inherit;background:#fff;}
+.search-input:focus{outline:none;border-color:var(--ep-blue);}
+
+.student-grid{display:grid;gap:14px;}
+.student-card{background:#fff;border:1px solid #e4e9fb;border-radius:14px;overflow:hidden;}
+.student-hdr{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;}
+.student-avatar{width:40px;height:40px;border-radius:50%;background:var(--ep-card-light);color:var(--ep-blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;}
+.student-meta{flex:1;min-width:0;}
+.student-name{font-size:15px;font-weight:700;color:var(--ep-navy);}
+.student-sub{font-size:12px;color:rgba(2,5,122,.55);margin-top:2px;}
+.student-count{font-size:11px;font-weight:700;color:var(--ep-blue);background:var(--ep-card-light);padding:4px 10px;border-radius:20px;}
+.student-arrow{font-size:11px;opacity:.4;transition:transform .18s;}
+.student-card.open .student-arrow{transform:rotate(180deg);}
+.student-del{background:none;border:none;color:rgba(2,5,122,.3);font-size:14px;cursor:pointer;padding:4px;}
+.student-del:hover{color:#dc2626;}
+
+.record-panel{display:none;border-top:1px solid #eef1fb;padding:16px 20px 20px;}
+.student-card.open .record-panel{display:block;}
+.record-add-btn{display:inline-flex;align-items:center;gap:6px;background:var(--ep-card-light);color:var(--ep-blue-deep);border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;margin-bottom:14px;font-family:inherit;}
+.record-add-btn:hover{background:#e0e7fe;}
+.record-empty{font-size:12.5px;color:rgba(2,5,122,.4);padding:8px 0;}
+.record-item{background:var(--ep-bg);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+.record-main{flex:1;min-width:0;}
+.record-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.record-subject{font-size:13px;font-weight:700;color:var(--ep-navy);}
+.record-exam{font-size:11px;color:var(--ep-blue);background:#fff;border:1px solid #dde2f5;padding:2px 8px;border-radius:20px;}
+.record-score{font-size:13px;font-weight:800;color:var(--ep-blue-deep);}
+.record-memo{font-size:12px;color:rgba(2,5,122,.6);line-height:1.6;}
+.record-foot{font-size:10.5px;color:rgba(2,5,122,.35);margin-top:6px;}
+.record-del{background:none;border:none;color:rgba(2,5,122,.3);font-size:13px;cursor:pointer;flex-shrink:0;}
+.record-del:hover{color:#dc2626;}
+
+.empty-state{text-align:center;padding:60px 20px;color:rgba(2,5,122,.4);font-size:13.5px;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,1,45,.45);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal-box{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:440px;max-height:88vh;overflow-y:auto;}
+.modal-box h3{font-size:17px;font-weight:800;color:var(--ep-navy);margin-bottom:18px;}
+.mf{margin-bottom:13px;}
+.mf label{display:block;font-size:12px;font-weight:700;color:rgba(2,5,122,.65);margin-bottom:5px;}
+.mf input,.mf textarea,.mf select{width:100%;border:1.5px solid #dde2f5;border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--ep-navy);font-family:inherit;background:#fff;resize:vertical;}
+.mf textarea{min-height:70px;}
+.mf input:focus,.mf textarea:focus,.mf select:focus{outline:none;border-color:var(--ep-blue);}
+.m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.m-cancel{padding:9px 16px;background:#f0f2fa;border:none;color:rgba(2,5,122,.65);border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;}
+.m-save{padding:9px 18px;background:var(--ep-blue);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ep-navy);color:#fff;font-size:12.5px;font-weight:600;padding:11px 20px;border-radius:20px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:3000;white-space:nowrap;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div><div class="top-title">행당 에듀플렉스</div><div class="top-sub">성적 관리 시스템</div></div>
+  <a class="top-back" href="eduplex_staff.html">← 교직원 페이지</a>
+</div>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-badge">🎓</div>
+    <h2>행당 성적관리</h2>
+    <p>학생 성적 관리 시스템에 접속합니다</p>
+    <div class="pin-label" style="text-align:left;">접속 비밀번호 (PIN)</div>
+    <div class="pin-row">
+      <input class="pin-input" type="password" id="pinInput" placeholder="PIN을 입력하세요" maxlength="12" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="pin-eye" id="pinEye" onclick="togglePin()">👁</button>
+    </div>
+    <button class="login-btn" onclick="doLogin()">접속하기</button>
+    <div class="login-error" id="loginError">PIN이 올바르지 않습니다.</div>
+    <div class="login-foot">모든 구성원이 접근할 수 있습니다</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="app-hdr">
+    <div class="app-title">📊 행당점 성적관리</div>
+    <div class="app-hdr-right">
+      <button class="btn btn-primary" onclick="openStudentModal()">+ 학생 추가</button>
+      <button class="btn btn-ghost" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search-input" id="searchInput" placeholder="학생 이름으로 검색..." oninput="renderStudents()">
+  </div>
+
+  <div class="student-grid" id="studentGrid"></div>
+</div>
+
+<!-- 학생 추가 모달 -->
+<div class="modal-bg" id="studentModal">
+  <div class="modal-box">
+    <h3>학생 추가</h3>
+    <div class="mf"><label>학생명 *</label><input type="text" id="stName" placeholder="예: 김행당"></div>
+    <div class="mf"><label>학교</label><input type="text" id="stSchool" placeholder="예: 행당중"></div>
+    <div class="mf"><label>학년</label><input type="text" id="stGrade" placeholder="예: 중2"></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeModal('studentModal')">취소</button>
+      <button class="m-save" onclick="saveStudent()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 성적 추가 모달 -->
+<div class="modal-bg" id="recordModal">
+  <div class="modal-box">
+    <h3>성적 추가</h3>
+    <div class="mf"><label>과목명 *</label><input type="text" id="rcSubject" placeholder="예: 수학"></div>
+    <div class="mf"><label>시험명</label><input type="text" id="rcExam" placeholder="예: 2026 2학기 중간고사"></div>
+    <div class="mf"><label>점수/등급 *</label><input type="text" id="rcScore" placeholder="예: 92점 / 1등급"></div>
+    <div class="mf"><label>작성자(담당 매니저)</label><input type="text" id="rcAuthor" placeholder="이름을 입력하세요"></div>
+    <div class="mf"><label>메모/피드백</label><textarea id="rcMemo" placeholder="특이사항이나 피드백을 입력하세요"></textarea></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeModal('recordModal')">취소</button>
+      <button class="m-save" onclick="saveRecord()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+/* ===== Firebase (행당점 전용 DB) ===== */
+const DB_URL = 'https://hdeduplex-homepage-default-rtdb.asia-southeast1.firebasedatabase.app/';
+const fbApp = firebase.initializeApp({ databaseURL: DB_URL });
+const db = firebase.database(fbApp);
+
+/* ===== 접속 PIN — 필요 시 이 값만 바꾸면 됩니다 ===== */
+const GRADE_PIN = '1672';
+
+let loggedIn = false;
+let students = {};   // { id: {name, school, grade, records:{id:{...}}} }
+let openId = null;
+
+function togglePin(){
+  const inp = document.getElementById('pinInput');
+  const eye = document.getElementById('pinEye');
+  if(inp.type === 'password'){ inp.type = 'text'; eye.textContent = '🙈'; }
+  else { inp.type = 'password'; eye.textContent = '👁'; }
+}
+
+function doLogin(){
+  const val = document.getElementById('pinInput').value.trim();
+  const err = document.getElementById('loginError');
+  if(val === GRADE_PIN){
+    loggedIn = true;
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    err.style.display = 'none';
+    loadStudents();
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+function doLogout(){
+  loggedIn = false;
+  document.getElementById('pinInput').value = '';
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('loginWrap').style.display = 'flex';
+}
+
+function loadStudents(){
+  db.ref('grades/students').on('value', snap => {
+    students = snap.val() || {};
+    renderStudents();
+  });
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderStudents(){
+  const grid = document.getElementById('studentGrid');
+  const q = (document.getElementById('searchInput').value||'').trim().toLowerCase();
+  const ids = Object.keys(students).filter(id => {
+    if(!q) return true;
+    return (students[id].name||'').toLowerCase().includes(q);
+  }).sort((a,b) => (students[a].name||'').localeCompare(students[b].name||'', 'ko'));
+
+  if(ids.length === 0){
+    grid.innerHTML = '<div class="empty-state">등록된 학생이 없습니다. 상단의 "+ 학생 추가" 버튼으로 시작하세요.</div>';
+    return;
+  }
+
+  grid.innerHTML = ids.map(id => {
+    const s = students[id];
+    const records = s.records || {};
+    const rIds = Object.keys(records).sort((a,b) => (records[b].date||'').localeCompare(records[a].date||''));
+    const isOpen = openId === id;
+    const metaParts = [s.school, s.grade].filter(Boolean).join(' · ') || '정보 없음';
+    const initial = (s.name||'?').trim().charAt(0);
+
+    const recordsHtml = rIds.length === 0
+      ? '<div class="record-empty">등록된 성적이 없습니다.</div>'
+      : rIds.map(rid => {
+          const r = records[rid];
+          return `<div class="record-item">
+            <div class="record-main">
+              <div class="record-top">
+                <span class="record-subject">${esc(r.subject)}</span>
+                ${r.exam ? `<span class="record-exam">${esc(r.exam)}</span>` : ''}
+                <span class="record-score">${esc(r.score)}</span>
+              </div>
+              ${r.memo ? `<div class="record-memo">${esc(r.memo)}</div>` : ''}
+              <div class="record-foot">${esc(r.author||'익명')} · ${esc(r.date||'')}</div>
+            </div>
+            <button class="record-del" onclick="event.stopPropagation();delRecord('${id}','${rid}')">✕</button>
+          </div>`;
+        }).join('');
+
+    return `<div class="student-card ${isOpen?'open':''}" id="card-${id}">
+      <div class="student-hdr" onclick="toggleStudent('${id}')">
+        <div class="student-avatar">${esc(initial)}</div>
+        <div class="student-meta">
+          <div class="student-name">${esc(s.name)}</div>
+          <div class="student-sub">${esc(metaParts)}</div>
+        </div>
+        <div class="student-count">${rIds.length}건</div>
+        <button class="student-del" onclick="event.stopPropagation();delStudent('${id}','${esc(s.name)}')">✕</button>
+        <div class="student-arrow">▾</div>
+      </div>
+      <div class="record-panel">
+        <button class="record-add-btn" onclick="openRecordModal('${id}')">+ 성적 추가</button>
+        ${recordsHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleStudent(id){
+  openId = (openId === id) ? null : id;
+  renderStudents();
+}
+
+function openStudentModal(){
+  document.getElementById('stName').value = '';
+  document.getElementById('stSchool').value = '';
+  document.getElementById('stGrade').value = '';
+  document.getElementById('studentModal').classList.add('open');
+}
+
+function saveStudent(){
+  const name = document.getElementById('stName').value.trim();
+  if(!name){ alert('학생명을 입력하세요.'); return; }
+  const school = document.getElementById('stSchool').value.trim();
+  const grade = document.getElementById('stGrade').value.trim();
+  const id = 's' + Date.now();
+  db.ref('grades/students/' + id).set({ name, school, grade }).then(() => {
+    closeModal('studentModal');
+    showToast('✓ 학생이 추가되었습니다.');
+  });
+}
+
+function delStudent(id, name){
+  if(!confirm(`'${name}' 학생과 모든 성적 기록을 삭제할까요?`)) return;
+  db.ref('grades/students/' + id).remove().then(() => showToast('✓ 삭제되었습니다.'));
+}
+
+let recordTargetId = null;
+function openRecordModal(studentId){
+  recordTargetId = studentId;
+  document.getElementById('rcSubject').value = '';
+  document.getElementById('rcExam').value = '';
+  document.getElementById('rcScore').value = '';
+  document.getElementById('rcAuthor').value = '';
+  document.getElementById('rcMemo').value = '';
+  document.getElementById('recordModal').classList.add('open');
+}
+
+function saveRecord(){
+  const subject = document.getElementById('rcSubject').value.trim();
+  const score = document.getElementById('rcScore').value.trim();
+  if(!subject || !score){ alert('과목명과 점수/등급을 입력하세요.'); return; }
+  const rec = {
+    subject,
+    exam: document.getElementById('rcExam').value.trim(),
+    score,
+    author: document.getElementById('rcAuthor').value.trim() || '익명',
+    memo: document.getElementById('rcMemo').value.trim(),
+    date: new Date().toLocaleDateString('ko-KR')
+  };
+  const rid = 'r' + Date.now();
+  db.ref(`grades/students/${recordTargetId}/records/${rid}`).set(rec).then(() => {
+    closeModal('recordModal');
+    showToast('✓ 성적이 저장되었습니다.');
+  });
+}
+
+function delRecord(studentId, recordId){
+  if(!confirm('이 성적 기록을 삭제할까요?')) return;
+  db.ref(`grades/students/${studentId}/records/${recordId}`).remove().then(() => showToast('✓ 삭제되었습니다.'));
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+document.querySelectorAll('.modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
