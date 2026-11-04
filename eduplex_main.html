@@ -373,6 +373,44 @@ body:not(.can-edit) .news-card [contenteditable]:focus{outline:none;background:n
 body.can-edit .news-card:not(.editing) [contenteditable]{pointer-events:none;cursor:default;}
 body.can-edit .news-card:not(.editing) [contenteditable]:focus{outline:none;background:none;}
 
+/* DOCS - 교육청 게시 서류 (밝은 섹션) */
+#docs{background:#EEF2FF;}
+#docs .sec-lbl{color:#0047C7;}
+#docs .sec-title{color:#02057A;}
+#docs .sec-desc{color:rgba(2,5,122,.65);max-width:620px;}
+.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.doc-card{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(0,71,199,.15);border-radius:var(--r);padding:16px 18px;transition:box-shadow .2s;}
+.doc-card:hover{box-shadow:0 8px 22px rgba(0,71,199,.12);}
+.doc-ico{width:44px;height:44px;border-radius:10px;background:rgba(0,71,199,.08);border:1px solid rgba(0,71,199,.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.doc-body{flex:1;min-width:0;}
+.doc-tag{display:inline-block;padding:2px 9px;border-radius:20px;background:rgba(0,71,199,.1);border:1px solid rgba(0,71,199,.2);font-size:10px;font-weight:700;color:#0047C7;margin-bottom:6px;min-width:36px;}
+.doc-title{font-size:14px;font-weight:700;color:#02057A;line-height:1.5;word-break:keep-all;}
+.doc-date{font-size:11px;color:rgba(2,5,122,.55);margin-top:3px;}
+.doc-tag:empty,.doc-date:empty{display:none;}
+body.admin-mode .doc-tag:empty{display:inline-block;}
+body.admin-mode .doc-date:empty{display:block;min-height:1em;}
+body.admin-mode .doc-tag:empty::before,body.admin-mode .doc-date:empty::before{content:attr(data-ph);color:rgba(2,5,122,.35);font-weight:500;}
+.doc-open{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:9px 14px;border-radius:8px;background:#02057A;color:#fff;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .15s;}
+.doc-open:hover{background:#0047C7;}
+.doc-open.off{background:rgba(2,5,122,.1);color:rgba(2,5,122,.5);cursor:default;}
+.doc-empty{grid-column:1/-1;text-align:center;padding:40px 20px;font-size:13px;color:rgba(2,5,122,.55);background:#fff;border:1px dashed rgba(0,71,199,.25);border-radius:var(--r);}
+.doc-admin{display:none;flex-direction:column;gap:6px;flex-shrink:0;}
+body.admin-mode .doc-admin{display:flex;}
+.doc-admin button{padding:5px 10px;border-radius:6px;border:1px solid rgba(0,71,199,.3);background:transparent;color:#0047C7;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.doc-admin button:hover{background:rgba(0,71,199,.08);}
+.doc-admin button.del{border-color:#e44;color:#e44;}
+.doc-admin button.del:hover{background:rgba(238,68,68,.08);}
+.doc-add{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;padding:18px;border:2px dashed rgba(0,71,199,.3);border-radius:var(--r);background:transparent;color:#0047C7;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.doc-add:hover{background:rgba(0,71,199,.06);}
+.doc-help{grid-column:1/-1;font-size:11px;line-height:1.7;color:rgba(2,5,122,.6);background:rgba(255,224,0,.22);border:1px solid rgba(2,5,122,.12);border-radius:8px;padding:10px 14px;}
+@media(max-width:960px){.doc-grid{grid-template-columns:1fr;}}
+@media(max-width:640px){.doc-card{flex-wrap:wrap;}.doc-open{width:100%;}.doc-admin{flex-direction:row;width:100%;}}
+/* 메뉴 항목이 늘어난 만큼 간격을 줄이고, 공간이 부족하면 전화번호 버튼은 숨김(상단바·플로팅 전화 버튼 있음) */
+@media(min-width:1041px) and (max-width:1360px){.ni>a{padding:0 11px;font-size:12.5px;}}
+@media(min-width:1041px) and (max-width:1290px){.nav-tel{display:none;}}
+/* 태블릿 폭(~1040px)에서 메뉴가 넘치지 않도록 햄버거 메뉴로 전환 */
+@media(max-width:1040px){.nav-items,.nav-reserve{display:none;}.hbg{display:flex;}}
+
 /* CONTACT - 네이비 배경 */
 #contact{background:var(--navy);}
 #contact .sec-lbl{color:var(--gold);}
@@ -537,6 +575,7 @@ input[type=file].hidden{display:none;}
     <!-- 수정3: 특별 프로그램 소메뉴 -->
 
     <div class="ni"><a href="#news">행당점 소식</a></div>
+    <div class="ni"><a href="#docs">교육청 서류</a></div>
     <!-- 수정2,7: 학습 관리로 변경, 소메뉴 변경, 수정14: 시험지분석 없음 -->
     <div class="ni"><a href="eduplex_study.html?tab=exam">시험지 분석</a></div>
     <div class="ni"><a href="eduplex_study.html?tab=hof">명예의 전당</a></div>
@@ -560,6 +599,7 @@ input[type=file].hidden{display:none;}
 
   <div class="mob-grp-title" style="margin-top:8px;">소식 & 문의</div>
   <a href="#news" class="mob-lnk" onclick="toggleMob()">행당점 소식</a>
+  <a href="#docs" class="mob-lnk" onclick="toggleMob()">교육청 게시 서류</a>
   <a href="#contact" class="mob-lnk" onclick="toggleMob()">상담 & 문의</a>
   <div class="mob-grp-title" style="margin-top:8px;">학습 관리</div>
   <a href="eduplex_study.html?tab=exam" class="mob-lnk">시험지 분석</a>
@@ -721,6 +761,20 @@ input[type=file].hidden{display:none;}
   </div>
 </section>
 
+<!-- DOCS (교육청 게시 서류) -->
+<section class="sec" id="docs">
+  <div class="sec-inner">
+    <div class="sec-head-row">
+      <div>
+        <div class="sec-lbl">NOTICE</div>
+        <h2 class="sec-title">교육청 게시 서류</h2>
+        <p class="sec-desc" id="docsDesc" data-key="docsDesc">교육청에 등록·신고한 서류와 게시 사항을 투명하게 공개합니다.</p>
+      </div>
+    </div>
+    <div class="doc-grid" id="docGrid"></div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section class="sec" id="contact">
   <div class="sec-inner">
@@ -786,6 +840,7 @@ input[type=file].hidden{display:none;}
       <div class="footer-links">
         <a href="https://blog.naver.com/dpeblee" target="_blank" class="footer-lnk">블로그</a>
         <a href="https://www.instagram.com/eduplex_hd/" target="_blank" class="footer-lnk">인스타그램</a>
+        <a href="#docs" class="footer-lnk">교육청 서류</a>
         <a href="tel:02-6949-1672" class="footer-lnk">02-6949-1672</a>
       </div>
       <div class="footer-copy">© 2026 행당 에듀플렉스. All rights reserved.</div>
@@ -905,6 +960,99 @@ const DEFAULTS={
   ]
 };
 
+/* ===== 교육청 게시 서류 ===== */
+const DOC_DEFAULTS=[
+  {cat:'등록',title:'학원 등록증',date:'',link:''},
+  {cat:'교습비',title:'교습비 등 게시표',date:'',link:''}
+];
+let docItems=DOC_DEFAULTS.map(x=>({...x}));
+
+function docsFromSite(val){
+  const v=val&&val.docItems;
+  if(Array.isArray(v))return v.filter(Boolean).map(x=>({...x}));
+  if(v&&typeof v==='object')return Object.values(v).filter(Boolean).map(x=>({...x}));
+  return (val&&val.docsInit)?[]:DOC_DEFAULTS.map(x=>({...x}));
+}
+function escAttr(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+/* http(s)·상대경로만 허용 (javascript: 등 차단) */
+function safeDocUrl(u){
+  u=String(u||'').trim();
+  if(!u)return '';
+  if(/^(https?:)?\/\//i.test(u))return u;
+  if(/^[a-z][a-z0-9+.\-]*:/i.test(u))return '';
+  return u;
+}
+function renderDocs(){
+  const grid=document.getElementById('docGrid');
+  if(!grid)return;
+  const ed=isAdmin?' contenteditable="true"':'';
+  let html=docItems.map((it,i)=>{
+    const url=safeDocUrl(it.link);
+    const btn=url
+      ?`<a class="doc-open" id="docLink-${i}" href="${escAttr(url)}" target="_blank" rel="noopener">📥 서류 보기</a>`
+      :`<span class="doc-open off" id="docLink-${i}">준비 중</span>`;
+    return `<div class="doc-card" id="docCard-${i}">
+      <div class="doc-ico">📄</div>
+      <div class="doc-body">
+        <div class="doc-tag" id="doctag-${i}" data-ph="분류"${ed}>${esc(it.cat)}</div>
+        <div class="doc-title" id="doctitle-${i}"${ed}>${esc(it.title)}</div>
+        <div class="doc-date" id="docdate-${i}" data-ph="게시일 (예: 2026.11.04)"${ed}>${esc(it.date)}</div>
+      </div>
+      ${btn}
+      <div class="doc-admin">
+        <button onclick="openDocLinkModal(${i})">🔗 링크</button>
+        <button class="del" onclick="removeDoc(${i})">✕ 삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+  if(!docItems.length&&!isAdmin)html='<div class="doc-empty">게시 서류를 준비 중입니다.</div>';
+  if(isAdmin){
+    html+='<button class="doc-add" onclick="addDoc()"><span>＋</span> 서류 추가</button>';
+    html+='<div class="doc-help">💡 PDF 파일은 GitHub 저장소의 <b>docs</b> 폴더에 올린 뒤, 🔗 링크에 <b>docs/파일명.pdf</b> 형식(또는 전체 주소)으로 입력하세요. 제목·분류·날짜는 클릭해서 바로 수정하고 <b>💾 전체 저장</b>을 눌러야 반영됩니다. (링크·삭제는 바로 저장)</div>';
+  }
+  grid.innerHTML=html;
+}
+/* 화면에서 편집한 텍스트를 docItems로 가져오기 */
+function readDocsFromDom(){
+  if(!isAdmin)return;
+  docItems=docItems.map((it,i)=>{
+    const t=document.getElementById('doctitle-'+i);
+    if(!t)return it;
+    return {...it,
+      cat:(document.getElementById('doctag-'+i)?.innerText||'').trim(),
+      title:t.innerText.trim(),
+      date:(document.getElementById('docdate-'+i)?.innerText||'').trim()};
+  });
+}
+async function persistDocs(){
+  try{await db.ref('site').update({docItems:docItems.length?docItems:null,docsInit:true});}
+  catch(e){showToast('⚠ 저장 실패: '+e.message);}
+}
+function addDoc(){
+  if(!isAdmin)return;
+  readDocsFromDom();
+  docItems.push({cat:'기타',title:'서류 제목을 입력하세요',date:'',link:''});
+  renderDocs();
+  showToast('＋ 추가됨 — 제목·링크 입력 후 💾 전체 저장');
+}
+function removeDoc(i){
+  if(!isAdmin)return;
+  if(!confirm('이 서류를 삭제할까요?'))return;
+  readDocsFromDom();
+  docItems.splice(i,1);
+  renderDocs();
+  persistDocs();
+  showToast('✓ 삭제됨');
+}
+function openDocLinkModal(i){
+  if(!isAdmin){showToast('⚠ 편집 권한이 없습니다.');return;}
+  readDocsFromDom();
+  document.getElementById('linkModalSub').textContent=`서류 ${i+1}번 링크 수정 (예: docs/학원등록증.pdf)`;
+  document.getElementById('linkModalInp').value=(docItems[i]&&docItems[i].link)||'';
+  document.getElementById('linkModal').classList.add('on');
+  linkEditTarget='docLink-'+i;
+}
+
 function loadSiteData(){
   db.ref('site').on('value',snap=>{
     const val=snap.val()||{};
@@ -924,6 +1072,8 @@ function loadSiteData(){
     siteData.specialPrograms = spData;
     renderSpecialPrograms(spData);
     renderNews(val.newsItems||DEFAULTS.newsItems);
+    docItems=docsFromSite(val);
+    renderDocs();
   });
 }
 
@@ -1196,6 +1346,18 @@ function saveLinkModal(){
     closeLinkModal();showToast('✓ 링크 저장됨!');
     return;
   }
+  // 교육청 서류 링크 처리
+  const docMatch=linkEditTarget.match(/^docLink-(\d+)$/);
+  if(docMatch){
+    const idx=parseInt(docMatch[1]);
+    if(!safeDocUrl(newUrl)){showToast('⚠ 올바른 링크 형식이 아닙니다. (https://… 또는 docs/파일명.pdf)');return;}
+    readDocsFromDom();
+    if(docItems[idx])docItems[idx].link=newUrl;
+    renderDocs();
+    persistDocs();
+    closeLinkModal();showToast('✓ 링크 저장됨!');
+    return;
+  }
   // 일반 링크
   const el=document.getElementById(linkEditTarget);
   if(el)el.setAttribute('href',newUrl);
@@ -1236,6 +1398,7 @@ function enterAdmin(){
   renderDayflow(siteData.dayflow||DEFAULTS.dayflow);
   renderSpecialPrograms(siteData.specialPrograms||DEFAULTS.specialPrograms);
   renderNews(siteData.newsItems||DEFAULTS.newsItems);
+  renderDocs();
 }
 function exitAdmin(){
   document.querySelectorAll('[contenteditable="true"]').forEach(el=>el.removeAttribute('contenteditable'));
@@ -1248,6 +1411,8 @@ function exitAdmin(){
   // 편집 종료 후 dayflow/special 재렌더 (✕ 버튼 제거)
   renderDayflow(siteData.dayflow||DEFAULTS.dayflow);
   renderSpecialPrograms(siteData.specialPrograms||DEFAULTS.specialPrograms);
+  docItems=docsFromSite(siteData);
+  renderDocs();
 }
 async function saveAll(){
   document.getElementById('savingDot').style.display='block';
@@ -1258,7 +1423,8 @@ async function saveAll(){
   const spItems=(siteData.specialPrograms||[]).map((item,i)=>({...item,title:document.getElementById(`spt-${i}`)?.innerText||item.title,sub:document.getElementById(`sps-${i}`)?.innerText||item.sub}));
   const newsItems=(siteData.newsItems||DEFAULTS.newsItems).map((item,i)=>({...item,tag:(document.getElementById('ntag-'+i)?.innerText||item.tag).trim(),title:(document.getElementById('ntitle-'+i)?.innerText||item.title).trim(),sub:(document.getElementById('nsub-'+i)?.innerText||item.sub).trim()}));
   try{
-    await db.ref('site').update({texts,dayflow,specialPrograms:spItems,newsItems,links:siteData.links||{}});
+    readDocsFromDom();
+    await db.ref('site').update({texts,dayflow,specialPrograms:spItems,newsItems,links:siteData.links||{},docItems:docItems.length?docItems:null,docsInit:true});
     showToast('✓ 저장 완료!');
   }catch(e){showToast('⚠ 저장 실패: '+e.message);}
   document.getElementById('savingDot').style.display='none';
@@ -1300,6 +1466,7 @@ function switchTab(t){
 renderDayflow(DEFAULTS.dayflow);
 renderSpecialPrograms(DEFAULTS.specialPrograms);
 renderNews(DEFAULTS.newsItems);
+renderDocs();
 </script>
 </body>
 </html>
